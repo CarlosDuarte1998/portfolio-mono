@@ -30,8 +30,6 @@ class ProjectController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        //images upload
-
         if ($request->hasFile('image')) {
            $imagePath = $request->file('image')->store('images', 'public');
         }else{
@@ -48,7 +46,9 @@ class ProjectController extends Controller
 
         $project->save();
 
-        return response()->json($project);
+        return inertia('projects', [
+            'projects' => Project::all()
+        ]);
     }
 
     /**

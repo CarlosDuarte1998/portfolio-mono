@@ -19,6 +19,7 @@ Route::get('/', function () {
 Route::middleware('auth', 'verified')->group(function () {
     Route::get('/dashboard', function () {return Inertia::render('Dashboard');})->name('dashboard');
     Route::get('/projects', function () {return Inertia::render('Projects');})->name('projects');
+    Route::get('/projects/edit', function () {return Inertia::render('Projects');})->name('projects.edit');
 });
 
 Route::middleware('auth')->group(function () {
