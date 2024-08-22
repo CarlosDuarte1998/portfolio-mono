@@ -5,6 +5,9 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Project;
+use Inertia\Inertia;
+use Illuminate\Support\Facades\Http;
+
 
 class ProjectController extends Controller
 {
@@ -54,9 +57,11 @@ class ProjectController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Request $request, string $id)
     {
         //
+        $project = Project::find($id);
+        return response()->json($project);
     }
 
     /**
@@ -73,5 +78,31 @@ class ProjectController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function edit(Request $request)
+    {
+        $projectId = $request->input('id');
+        $response = Http::get(route('projects.show', $projectId));
+        $projectData = $response->json();
+        $hasRecords = !empty($projectData);
+        if ($hasRecords) {
+            return Inertia::render('Projects/Edit', [
+                'project' => [
+                    'hasRecords' => $hasRecords,
+                    'id' => $projectId,
+                    'data' => $projectData,
+                ]
+            ]);
+        } else {
+            return Inertia::render('Projects/Edit', [
+                'project' => [
+                    'hasRecords' => $hasRecords,
+                    'id' => $projectId,
+                    'data' => [],
+                ]
+            ]);
+        }
+
     }
 }
